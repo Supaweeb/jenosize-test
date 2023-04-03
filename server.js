@@ -1,8 +1,9 @@
 const express = require("express");
+const cors = require('cors');
 const app = express();
 const jenosizeController = require("./controllers/jenosizeController");
-const port = 3000;
 
+const PORT = process.env.PORT || 8080;
 const validate = (req, res, next) => {
     if (!req.headers['api-key']) {
         res.status(400).json({ message: "Missing header api-key" });
@@ -11,7 +12,12 @@ const validate = (req, res, next) => {
     }
 }
 
+app.use(cors());
 app.use(validate)
+
+app.get("/", (req, res) => {
+    res.send('Hello from App Engine!');
+});
 
 app.get("/place/:id",
     jenosizeController.findRestaurant(),
@@ -29,6 +35,6 @@ app.get("/game",
     }
 );
 
-app.listen(3000, () => {
-    console.log("Starting server at port " + port);
+app.listen(PORT, () => {
+    console.log("Starting server at port " + PORT);
 });
